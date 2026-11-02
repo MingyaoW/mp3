@@ -40,9 +40,7 @@ function isInvalidQueryError(err) {
 
 
 function validateUser(body) {
-  if (new Set(body.pendingTasks).size !== body.pendingTasks.length) {
-    return "pendingTasks must not contain duplicate IDs";
-  }
+
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     return "Invalid user data";
   }
@@ -59,9 +57,14 @@ function validateUser(body) {
     if (!Array.isArray(body.pendingTasks)) {
       return "pendingTasks must be an array";
     }
-
     if (!body.pendingTasks.every(isValidId)) {
       return "pendingTasks must contain valid task IDs";
+    }
+    if (
+      new Set(body.pendingTasks).size !==
+      body.pendingTasks.length
+    ) {
+      return "pendingTasks must not contain duplicate IDs";
     }
   }
 

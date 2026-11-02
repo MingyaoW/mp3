@@ -361,7 +361,6 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     const id = req.params.id;
   
-    // 1. Invalid URL ID -> 404
     if (!isValidId(id)) {
       return res.status(404).json({
         message: "User not found",
@@ -376,15 +375,12 @@ router.delete("/:id", async (req, res) => {
       let deletedUser;
   
       await session.withTransaction(async () => {
-        // 2. Find user
         const user = await User.findById(id).session(session);
   
         if (!user) {
           throw new RequestError(404, "User not found");
         }
   
-        // 3. Unassign ALL tasks belonging to this user
-        // This includes both pending and completed tasks.
         await Task.updateMany(
           { assignedUser: id },
           {
@@ -396,7 +392,6 @@ router.delete("/:id", async (req, res) => {
           { session }
         );
   
-        // 4. Delete user
         await User.deleteOne(
           { _id: user._id },
           { session }
