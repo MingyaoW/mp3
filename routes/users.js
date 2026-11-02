@@ -405,10 +405,7 @@ router.delete("/:id", async (req, res) => {
         deletedUser = user;
       });
   
-      return res.status(200).json({
-        message: "User deleted successfully",
-        data: deletedUser
-      });
+      return res.status(204).end();
   
     } catch (err) {
       console.error("DELETE /api/users/:id:", err);
